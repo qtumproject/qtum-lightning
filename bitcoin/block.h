@@ -14,10 +14,21 @@ struct bitcoin_block_hdr {
 	le32 timestamp;
 	le32 target;
 	le32 nonce;
+
+    struct sha256_double hashStateRoot; // qtum
+    struct sha256_double hashUTXORoot; // qtum
+
+    struct sha256_double prev_stake_hash;
+    le32 prev_stake_n;
+
+    u8 * vchSig;
 };
 
 struct bitcoin_block {
 	struct bitcoin_block_hdr hdr;
+
+    struct sha256_double block_id;
+
 	/* tal_count shows now many */
 	struct bitcoin_tx **tx;
 };

@@ -1,21 +1,6 @@
-# c-lightning: A specification compliant Lightning Network implementation in C
-
-c-lightning is a [standard compliant](https://github.com/lightningnetwork/lightning-rfc) implementation of the Lightning Network protocol.
-The Lightning Network is a scalability solution for Bitcoin, enabling secure and instant transfer of funds between any two party for any amount. 
-
-For more information about the Lightning Network please refer to http://lightning.network.
-
-## Project Status
-
-This implementation is still very much work in progress, and, although it can be used for testing, __it should not be used for real funds__.
-We do our best to identify and fix problems, and implement missing feature.
-
-Any help testing the implementation, reporting bugs, or helping with outstanding issues is very welcome.
-Don't hesitate to reach out to us on IRC at [#lightning-dev @ freenode.net](http://webchat.freenode.net/?channels=%23lightning-dev), [#c-lightning @ freenode.net](http://webchat.freenode.net/?channels=%23c-lightning), or on the mailing list [lightning-dev@lists.linuxfoundation.org](https://lists.linuxfoundation.org/mailman/listinfo/lightning-dev).
-
 ## Getting Started
 
-c-lightning currently only works on Linux (and possibly Mac OS with some tweaking), and requires a locally running `bitcoind` that is fully caught up with the network you're testing on.
+c-lightning currently only works on Linux (and possibly Mac OS with some tweaking), and requires a locally running `qtumd`.
 
 ### Installation
 
@@ -24,37 +9,33 @@ For the impatient here's the gist of it for Ubuntu and Debian:
 
 ```
 sudo apt-get install -y autoconf git build-essential libtool libgmp-dev libsqlite3-dev python python3
-git clone https://github.com/ElementsProject/lightning.git
+git clone https://gitlab.pixelplex.by/593_qtum/lightning.git
 cd lightning
+git checkout -b atbcoin origin/qtum
 make
-```
-
-Or if you like to throw `docker` into the mix:
-
-```
-sudo docker run \
-	-v $HOME/.lightning:/root/.lightning \
-	-v $HOME/.bitcoin:/root/.bitcoin \
-	-p 9735:9735 \
-	cdecker/lightningd:master
 ```
 ### Starting `lightningd`
 
-In order to start `lightningd` you will need to have a local `bitcoind` node running in either testnet or regtest mode:
+In order to start `lightningd` you will need to have a local `qtumd` node running:
 
 ```
-bitcoind -daemon -testnet
+qtumd -daemon
 ```
 
-Wait until `bitcoind` has synchronized with the testnet network. In case you use regtest, make sure you generate at least 432 blocks to activate SegWit. 
+Wait until `qtumd` has synchronized with the network.
 
 You can start `lightningd` with the following command:
 
 ```
-lightningd/lightningd --network=testnet --log-level=debug
+lightningd/lightningd --network=qtum
 ```
+or
+```
+lightningd/lightningd --network=qtum --log-level=debug
+```
+for better informativeness.
 
-### Opening a channel on the Bitcoin testnet
+### Opening a channel on the Qtum
 
 First you need to transfer some funds to `lightningd` so that it can open a channel:
 
@@ -63,54 +44,73 @@ First you need to transfer some funds to `lightningd` so that it can open a chan
 cli/lightning-cli newaddr 
 
 # Returns a transaction id <txid>
-bitcoin-cli -testnet sendtoaddress <address> <amount>
+qtum-cli sendtoaddress <address> <funds_amount>
 
 # Retrieves the raw transaction <rawtx>
-bitcoin-cli -testnet getrawtransaction <txid>
+qtum-cli getrawtransaction <txid>
 
 # Notifies `lightningd` that there are now funds available:
 cli/lightning-cli addfunds <rawtx>
 ```
 
 Eventually `lightningd` will include its own wallet making this transfer easier, but for now this is how it gets its funds.
-If you don't have any testcoins you can get a few from a faucet such as [TPs' testnet faucet](http://tpfaucet.appspot.com/) or [Kiwi's testnet faucet](https://testnet.manu.backend.hamburg/faucet).
 
 Once `lightningd` has funds, we can connect to a node and open a channel.
-Let's assume the remote node is accepting connections at `<ip>:<port>` and has the node ID `<node_id>`:
+Let's assume the remote node is accepting connections at `<recipient_ip>:<recipient_port>` and has the node ID `<recipient_id>`:
 
 ```
-cli/lightning-cli connect <ip> <port> <node_id>
-cli/lightning-cli fundchannel <node_id> <amount>
+cli/lightning-cli connect <recipient_ip> <recipient_port> <recipient_id>
+cli/lightning-cli fundchannel <recipient_id> <channel_amount>
 ```
 
 This opens a connection and, on top of that connection, then opens a channel.
 You can check the status of the channel using `cli/lightning-cli getpeers`.
-The funding transaction needs to confirm in order for the channel to be usable, so wait a few minutes, and once that is complete it `getpeers` should say that the status is in _Normal operation_. 
+The funding transaction needs to confirm in order for the channel to be usable, so wait generate 3 new blocks in qtum network, and once that is complete it `getpeers` should say that the status is in _CHANNELD_NORMAL_. Now, if we need we can close the channel.
 
 ### Receiving and receiving payments
 
 Payments in Lightning are invoice based.
-The recipient creates an invoice with the expected `<amount>` in millisatoshi and a `<label>`:
+The recipient creates an invoice with the expected `<send_amount>` in millisatoshi and a `<label>`:
 
 ```
-cli/lightning-cli invoice <amount> <label>
+cli/lightning-cli invoice <send_amount> <label>
 ```
 
 This returns a random value called `rhash` that is part of the invoice.
-The recipient needs to communicate its ID `<recipient_id>`, `<rhash>` and the desired `<amount>` to the sender.
+The recipient needs to communicate its ID `<recipient_id>`, `<rhash>` and the desired `<send_amount>` to the sender.
 
 The sender needs to compute a route to the recipient, and use that route to actually send the payment.
 The route contains the path that the payment will take throught the Lightning Network and the respective funds that each node will forward.
+To the implementation `getroute` we should wait for generate atb network new 6 blocks after fulfilling `fundchannel`.
 
 ```
-route=$(cli/lightning-cli getroute <recipient_id> <amount> 1 | jq --raw-output .route -)
-cli/lightning-cli sendpay $route <rhash>
+cli/lightning-cli getroute <recipient_id> <send_amount> 1
+# Returns:
+#{ "route" : [{ "id" : "<recipient_id>", "channel" : "<channel>", "msatoshi" : <send_amount>, "delay" : <delay> } ] }
+
+cli/lightning-cli sendpay '[{ "id" : "<recipient_id>", "channel" : "<channel>", "msatoshi" : <send_amount>, "delay" : <delay> } ]' <rhash>
 ```
 
 Notice that in the first step we stored the route in a variable and reused it in the second step.
 `lightning-cli` should return a preimage that serves as a receipt, confirming that the payment was successful.
+Upon receipt of preimage we close the channel following command:
 
-This low-level interface is still experimental and will eventually be complemented with a higher level interface that is easier to use.
+```
+daemon/lightning-cli close <recipient_id>
+```
+
+After close the channel, our state change to `ONCHAIND_MUTUAL` and after generate new 5 blocks in network we can close lightning node or make other different operations with it.
+
+### Transfer of funds from `lightningd` to `Qtum`
+
+If we want to transfer funds from `lightning` to `Qtum`, we can use `withdraw`. `<amount_to_Qtum>` in satoshi.
+
+````
+cli/lightning-cli withdraw <Qtum_address> <amount_to_Qtum>
+```
+
+After the commit `withdraw`, if successful, we get `<raw_transaction>` and `<txid>`.
+
 
 ## Further information
 
@@ -124,3 +124,4 @@ JSON-RPC interface is documented in the following manual pages:
 * [sendpay](doc/lightning-sendpay.7.txt)
 
 For simple access to the JSON-RPC interface you can use the `cli/lightning-cli` tool, or the [python API client](contrib/pylightning).
+

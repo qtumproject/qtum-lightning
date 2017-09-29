@@ -280,7 +280,7 @@ void bitcoin_txid(const struct bitcoin_tx *tx, struct sha256_double *txid)
 {
 	struct sha256_ctx ctx = SHA256_INIT;
 
-	/* For TXID, we never use extended form. */
+    /* For TXID, we never use extended form. */
 	push_tx(tx, push_sha, &ctx, false);
 	sha256_double_done(&ctx, txid);
 }

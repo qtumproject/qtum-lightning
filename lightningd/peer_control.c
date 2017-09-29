@@ -2656,7 +2656,7 @@ static void json_fund_channel(struct command *cmd,
 	/* Try to do this now, so we know if insufficient funds. */
 	/* FIXME: Feerate & dustlimit */
 	fc->utxomap = build_utxos(fc, cmd->ld, fc->peer->funding_satoshi,
-				  15000, 600, &fc->change, &fc->change_keyindex);
+				cmd->ld->topology->default_fee_rate, 600, &fc->change, &fc->change_keyindex);
 	if (!fc->utxomap) {
 		command_fail(cmd, "Cannot afford funding transaction");
 		return;

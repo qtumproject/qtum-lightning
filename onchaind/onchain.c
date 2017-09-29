@@ -488,7 +488,7 @@ static bool is_local_commitment(const struct sha256_double *txid,
 /* BOLT #5:
  *
  * Outputs which are *resolved* are considered *irrevocably resolved*
- * once their *resolving* transaction is included in a block at least 100
+ * once their *resolving* transaction is included in a block at least 5
  * deep on the most-work blockchain.
  */
 static bool all_irrevocably_resolved(struct tracked_output **outs)
@@ -496,7 +496,7 @@ static bool all_irrevocably_resolved(struct tracked_output **outs)
 	size_t i;
 
 	for (i = 0; i < tal_count(outs); i++) {
-		if (outs[i]->resolved && outs[i]->resolved->depth < 100)
+		if (outs[i]->resolved && outs[i]->resolved->depth < 5)
 			return false;
 	}
 	return true;

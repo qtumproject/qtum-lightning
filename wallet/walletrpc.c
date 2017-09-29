@@ -83,7 +83,6 @@ static void json_withdraw(struct command *cmd,
 	struct withdrawal *withdraw;
 	bool testnet;
 	/* FIXME: Read feerate and dustlimit */
-	u32 feerate_per_kw = 15000;
 	//u64 dust_limit = 600;
 	u64 fee_estimate;
 	struct utxo *utxos;
@@ -117,7 +116,7 @@ static void json_withdraw(struct command *cmd,
 	/* Select the coins */
 	withdraw->utxos = wallet_select_coins(cmd, cmd->ld->wallet,
 					      withdraw->amount,
-					      feerate_per_kw, &fee_estimate,
+					      cmd->ld->topology->default_fee_rate, &fee_estimate,
 					      &withdraw->changesatoshi);
 	if (!withdraw->utxos) {
 		command_fail(cmd, "Not enough funds available");
@@ -177,8 +176,8 @@ static void json_withdraw(struct command *cmd,
 		/* P2SH inputs have same witness. */
 		tx->input[i].witness
 			= bitcoin_witness_p2wpkh(tx, &sigs[i], &key);
+        tx->input[i].script = NULL;
 	}
-
 	/* Now broadcast the transaction */
 	withdraw->hextx = tal_hex(withdraw, linearize_tx(cmd, tx));
 	bitcoind_sendrawtx(cmd->ld->topology->bitcoind, withdraw->hextx,

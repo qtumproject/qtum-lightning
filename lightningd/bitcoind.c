@@ -464,7 +464,7 @@ struct bitcoind *new_bitcoind(const tal_t *ctx, struct log *log)
 	struct bitcoind *bitcoind = tal(ctx, struct bitcoind);
 
 	/* Use testnet by default, change later if we want another network */
-	bitcoind->chainparams = chainparams_for_network("testnet");
+	bitcoind->chainparams = chainparams_for_network("qtum");
 	bitcoind->datadir = NULL;
 	bitcoind->log = log;
 	bitcoind->req_running = false;

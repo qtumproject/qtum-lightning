@@ -6,7 +6,7 @@ LIGHTNING_CLI_COMMON_OBJS :=			\
 	common/json.o				\
 	common/version.o
 
-lightning-cli-all: cli/lightning-cli
+lightningd-all: cli/lightning-cli
 
 $(LIGHTNINGD_OPENING_OBJS): $(LIGHTNINGD_HEADERS) $(EXTERNAL_HEADERS)
 
