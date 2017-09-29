@@ -133,6 +133,9 @@ static void drop_to_chain(struct peer *peer)
 	/* Keep broadcasting until we say stop (can fail due to dup,
 	 * if they beat us to the broadcast). */
 	broadcast_tx(peer->ld->topology, peer, peer->last_tx, NULL);
+
+	u64 change_satoshi;
+    wallet_extract_owned_outputs(peer->ld->wallet, peer->last_tx, &change_satoshi);
 }
 
 void peer_fail_permanent(struct peer *peer, const u8 *msg)
