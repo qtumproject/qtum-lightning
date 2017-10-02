@@ -3,14 +3,10 @@
 #include "bitcoin/tx.h"
 #include <ccan/str/hex/hex.h>
 
-#include "shadouble.h"
-#include <stdio.h>
-
-
 
 void get_header(const u8 **p, size_t *len, struct bitcoin_block_hdr *hdr)
 {
-    pull(p, len, hdr, sizeof(*hdr) - sizeof(hdr->vchSig) - 4);
+    pull(p, len, hdr, sizeof(*hdr) - sizeof(hdr->vchSig));
 
     u8 xx = pull_varint(p, len);
 
@@ -23,7 +19,7 @@ void get_header(const u8 **p, size_t *len, struct bitcoin_block_hdr *hdr)
 void sha256_header(struct sha256_double *shadouble, const struct bitcoin_block_hdr *hdr)
 {
     //lenght header without vchSig
-    size_t len = sizeof(*hdr) - sizeof(&hdr->vchSig) - 4;
+    size_t len = sizeof(*hdr) - sizeof(&hdr->vchSig);
     //lenght hdr->vchSig
     size_t lenVch = 1 + hdr->vchSig[0];
 

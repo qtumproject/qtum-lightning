@@ -7,6 +7,8 @@
 #include <ccan/tal/tal.h>
 #include <stdbool.h>
 
+
+#pragma pack(push, 4)
 struct bitcoin_block_hdr {
 	le32 version;
 	struct sha256_double prev_hash;
@@ -23,6 +25,7 @@ struct bitcoin_block_hdr {
 
     u8 *vchSig;
 };
+#pragma pack(pop)
 
 struct bitcoin_block {
 	struct bitcoin_block_hdr hdr;
