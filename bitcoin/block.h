@@ -21,13 +21,11 @@ struct bitcoin_block_hdr {
     struct sha256_double prev_stake_hash;
     le32 prev_stake_n;
 
-    u8 * vchSig;
+    u8 *vchSig;
 };
 
 struct bitcoin_block {
 	struct bitcoin_block_hdr hdr;
-
-    struct sha256_double block_id;
 
 	/* tal_count shows now many */
 	struct bitcoin_tx **tx;
@@ -43,4 +41,10 @@ bool bitcoin_blkid_from_hex(const char *hexstr, size_t hexstr_len,
 /* Get hex string of blockid (reversed, a-la bitcoind). */
 bool bitcoin_blkid_to_hex(const struct sha256_double *blockid,
 			  char *hexstr, size_t hexstr_len);
+
+
+void get_header(const u8 **p, size_t *len, struct bitcoin_block_hdr *hdr);
+void sha256_header(struct sha256_double *shadouble, const struct bitcoin_block_hdr hdr);
+
+
 #endif /* LIGHTNING_BITCOIN_BLOCK_H */
