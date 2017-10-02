@@ -24,12 +24,14 @@ void sha256_header(struct sha256_double *shadouble, const struct bitcoin_block_h
 {
     //lenght header without vchSig
     size_t len = sizeof(hdr) - sizeof(&hdr.vchSig) - 4;
-    
-    u8 * hdrWithVchSig = (u8*) malloc(len + 1 + hdr.vchSig[0]);
-    memcpy(hdrWithVchSig, &hdr, len);
-    memcpy(hdrWithVchSig + len, &hdr.vchSig[0], 1 + hdr.vchSig[0]);
+    //lenght hdr->vchSig
+    size_t lenVch = 1 + hdr.vchSig[0];
 
-    sha256_double(shadouble, hdrWithVchSig, len + 1 + hdr.vchSig[0]);
+    u8 * hdrWithVchSig = (u8*) malloc(len + lenVch);
+    memcpy(hdrWithVchSig, &hdr, len);
+    memcpy(hdrWithVchSig + len, &hdr.vchSig[0], lenVch);
+
+    sha256_double(shadouble, hdrWithVchSig, len + lenVch);
 
     free(hdrWithVchSig);
 }
