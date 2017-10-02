@@ -44,7 +44,7 @@ bool bitcoin_blkid_to_hex(const struct sha256_double *blockid,
 
 
 void get_header(const u8 **p, size_t *len, struct bitcoin_block_hdr *hdr);
-void sha256_header(struct sha256_double *shadouble, const struct bitcoin_block_hdr hdr);
+void sha256_header(struct sha256_double *shadouble, const struct bitcoin_block_hdr *hdr);
 
 
 #endif /* LIGHTNING_BITCOIN_BLOCK_H */

@@ -20,16 +20,16 @@ void get_header(const u8 **p, size_t *len, struct bitcoin_block_hdr *hdr)
     pull(p, len, hdr->vchSig + 1, xx);
 }
 
-void sha256_header(struct sha256_double *shadouble, const struct bitcoin_block_hdr hdr)
+void sha256_header(struct sha256_double *shadouble, const struct bitcoin_block_hdr *hdr)
 {
     //lenght header without vchSig
-    size_t len = sizeof(hdr) - sizeof(&hdr.vchSig) - 4;
+    size_t len = sizeof(*hdr) - sizeof(&hdr->vchSig) - 4;
     //lenght hdr->vchSig
-    size_t lenVch = 1 + hdr.vchSig[0];
+    size_t lenVch = 1 + hdr->vchSig[0];
 
     u8 * hdrWithVchSig = (u8*) malloc(len + lenVch);
-    memcpy(hdrWithVchSig, &hdr, len);
-    memcpy(hdrWithVchSig + len, &hdr.vchSig[0], lenVch);
+    memcpy(hdrWithVchSig, hdr, len);
+    memcpy(hdrWithVchSig + len, &hdr->vchSig[0], lenVch);
 
     sha256_double(shadouble, hdrWithVchSig, len + lenVch);
 
