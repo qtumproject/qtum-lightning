@@ -2531,7 +2531,7 @@ void peer_fundee_open(struct peer *peer, const u8 *from_peer,
 	subd_send_msg(peer->owner, take(msg));
 	/* FIXME: Expose the min_feerate_per_kw and max_feerate_per_kw in the config */
 	msg = towire_opening_fundee(peer, peer->minimum_depth,
-				    7500, 150000, from_peer);
+                    ld->topology->default_fee_rate/2, ld->topology->default_fee_rate*10, from_peer);
 
 	/* Careful here!  Their message could push us overlength! */
 	if (tal_len(msg) >= 65536) {
@@ -2614,7 +2614,7 @@ static bool gossip_peer_released(struct subd *gossip,
 	/* FIXME: Real feerate! */
 	msg = towire_opening_funder(fc, fc->peer->funding_satoshi,
 				    fc->peer->push_msat,
-				    15000, max_minimum_depth,
+                    fc->cmd->ld->topology->default_fee_rate, max_minimum_depth,
 				    fc->change, fc->change_keyindex,
 				    fc->peer->channel_flags,
 				    utxos, fc->peer->ld->wallet->bip32_base);

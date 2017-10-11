@@ -65,7 +65,7 @@ cli/lightning-cli fundchannel <recipient_id> <channel_amount>
 
 This opens a connection and, on top of that connection, then opens a channel.
 You can check the status of the channel using `cli/lightning-cli getpeers`.
-The funding transaction needs to confirm in order for the channel to be usable, so wait generate 3 new blocks in qtum network, and once that is complete it `getpeers` should say that the status is in _CHANNELD_NORMAL_. Now, if we need we can close the channel.
+The funding transaction needs to confirm in order for the channel to be usable, so wait generate new block in qtum network, and once that is complete it `getpeers` should say that the status is in _CHANNELD_NORMAL_. Now, if we need we can close the channel.
 
 ### Receiving and receiving payments
 
