@@ -379,7 +379,6 @@ void drop_to_chain(struct lightningd *ld, struct channel *channel,
 		/* Keep broadcasting until we say stop (can fail due to dup,
 		 * if they beat us to the broadcast). */
 		broadcast_tx(ld->topology, channel, channel->last_tx, NULL);
-
 		remove_sig(channel->last_tx);
 	}
 

@@ -3,7 +3,6 @@
 #include "bitcoin/tx.h"
 #include <ccan/str/hex/hex.h>
 #include <common/type_to_string.h>
-
 /* Encoding is <blockhdr> <varint-num-txs> <tx>... */
 struct bitcoin_block *bitcoin_block_from_hex(const tal_t *ctx,
 					     const char *hex, size_t hexlen)
@@ -25,7 +24,8 @@ struct bitcoin_block *bitcoin_block_from_hex(const tal_t *ctx,
 	if (!hex_decode(hex, hexlen, linear_tx, len))
 		return tal_free(b);
 
-	pull(&p, &len, &b->hdr, sizeof(b->hdr));
+	get_header(&p, &len, &b->hdr);
+
 	num = pull_varint(&p, &len);
 	b->tx = tal_arr(b, struct bitcoin_tx *, num);
 	for (i = 0; i < num; i++)
@@ -37,6 +37,35 @@ struct bitcoin_block *bitcoin_block_from_hex(const tal_t *ctx,
 
 	tal_free(linear_tx);
 	return b;
+}
+
+void get_header(const u8 **p, size_t *len, struct bitcoin_block_hdr *hdr)
+{
+    pull(p, len, hdr, sizeof(*hdr) - sizeof(hdr->vchSig));
+
+    u8 xx = pull_varint(p, len);
+
+    hdr->vchSig = tal_arr(hdr, u8, xx + 1);
+
+    hdr->vchSig[0] = xx;
+    pull(p, len, hdr->vchSig + 1, xx);
+}
+
+void sha256_header(struct sha256_double *shadouble, const struct bitcoin_block_hdr *hdr)
+{
+    //lenght header without vchSig
+    size_t len = sizeof(*hdr) - sizeof(&hdr->vchSig);
+
+	//length hd->vchSig
+	size_t lenVch = 1 + hdr->vchSig[0];
+
+    u8 * hdrWithVchSig = (u8*) malloc(len + 1 + hdr->vchSig[0]);
+    memcpy(hdrWithVchSig, hdr, len);
+    memcpy(hdrWithVchSig + len, &hdr->vchSig[0], lenVch);
+
+	sha256_double(shadouble, hdrWithVchSig, len + lenVch);
+
+    free(hdrWithVchSig);
 }
 
 /* We do the same hex-reversing crud as txids. */
