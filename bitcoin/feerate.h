@@ -7,14 +7,14 @@
 /* bitcoind considers 250 satoshi per kw to be the minimum acceptable fee:
  * less than this won't even relay.
  */
-#define BITCOIND_MINRELAYTXFEE_PER_KW 250
+#define BITCOIND_MINRELAYTXFEE_PER_KW 100000
 /*
  * But bitcoind uses vbytes (ie. (weight + 3) / 4) for this
  * calculation, rather than weight, meaning we can disagree since we do
  * it sanely (as specified in BOLT #3).
  */
 #define FEERATE_BITCOIND_SEES(feerate, weight) \
-	(((feerate) * (weight)) / 1000 * 1000 / ((weight) + 3))
+	(((feerate) * (weight)) / 400000 * 400000 / ((weight) + 3))
 /* ie. fee = (feerate * weight) // 1000
  * bitcoind needs (worst-case): fee * 1000 / (weight + 3) >= 250
  *
@@ -31,7 +31,7 @@
 /*
  * This formula is satisfied by a feerate of 253 (hand-search).
  */
-#define FEERATE_FLOOR 253
+#define FEERATE_FLOOR 101000
 
 static inline u32 feerate_floor(void)
 {
@@ -47,4 +47,6 @@ static inline u32 feerate_floor(void)
 
 	return FEERATE_FLOOR;
 }
+
+
 #endif /* LIGHTNING_BITCOIN_FEERATE_H */
