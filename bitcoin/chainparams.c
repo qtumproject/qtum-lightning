@@ -19,7 +19,7 @@ const struct chainparams networks[] = {
      .rpc_port = 3889,
      .cli = "qtum-cli",
      .cli_args = NULL,
-     .dust_limit = { 546 },
+     .dust_limit = { 72800 },
      /* BOLT #2:
       *
       * The sending node:
@@ -41,7 +41,7 @@ const struct chainparams networks[] = {
      .rpc_port = 13889,
      .cli = "qtum-cli",
      .cli_args = "-regtest",
-     .dust_limit = { 546 },
+     .dust_limit = { 72800 },
      .max_funding = AMOUNT_SAT_INIT((1 << 24) - 1),
      .max_payment = AMOUNT_MSAT_INIT(0xFFFFFFFFULL),
      .when_lightning_became_cool = 1,
@@ -56,7 +56,7 @@ const struct chainparams networks[] = {
      .rpc_port = 13889,
      .cli = "qtum-cli",
      .cli_args = "-testnet",
-     .dust_limit = { 546 },
+     .dust_limit = { 72800 },
      .max_funding = AMOUNT_SAT_INIT((1 << 24) - 1),
      .max_payment = AMOUNT_MSAT_INIT(0xFFFFFFFFULL),
      .p2pkh_version = 111,
