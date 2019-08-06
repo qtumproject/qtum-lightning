@@ -342,8 +342,8 @@ int main(void)
 	const struct htlc **htlc_map, **htlcs;
 	const u8 *funding_wscript, **wscripts;
 	size_t i;
-	const struct chainparams *chainparams = chainparams_for_network("bitcoin");
-
+	//const struct chainparams *chainparams = chainparams_for_network("bitcoin");
+	const struct chainparams *chainparams = chainparams_for_network("qtum");
 	wally_init(0);
 	secp256k1_ctx = wally_get_secp_context();
 	setup_tmpctx();
