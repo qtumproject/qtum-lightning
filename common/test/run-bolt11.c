@@ -182,16 +182,16 @@ int main(void)
 	 * * `ca784w`: Bech32 checksum
 	 */
 	b11 = new_bolt11(tmpctx, NULL);
-	b11->chain = chainparams_for_network("bitcoin");
+	b11->chain = chainparams_for_network("qtum");
 	b11->timestamp = 1496314658;
 	if (!hex_decode("0001020304050607080900010203040506070809000102030405060708090102",
 			strlen("0001020304050607080900010203040506070809000102030405060708090102"),
 			&b11->payment_hash, sizeof(b11->payment_hash)))
 		abort();
+		
 	b11->receiver_id = node;
 	b11->description = "Please consider supporting this project";
-
-	test_b11("lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdpl2pkx2ctnv5sxxmmwwd5kgetjypeh2ursdae8g6twvus8g6rfwvs8qun0dfjkxaq8rkx3yf5tcsyz3d73gafnh3cax9rn449d9p5uxz9ezhhypd0elx87sjle52x86fux2ypatgddc6k63n7erqz25le42c4u4ecky03ylcqca784w", b11, NULL);
+	test_b11("lnqc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdpl2pkx2ctnv5sxxmmwwd5kgetjypeh2ursdae8g6twvus8g6rfwvs8qun0dfjkxaqwsvexcd4hkjec6rnx4zk0xmtdte9fzzygjqxyn53lkr75zxtysgsmyc282fvmqhwppq6p5fljvvdy9jr3ykus0v9h9z53ufxthqznzsqpcyu97", b11, NULL);
 
 	/* BOLT #11:
 	 *
@@ -214,9 +214,10 @@ int main(void)
 	 * * `aztrnwngzn3kdzw5hydlzf03qdgm2hdq27cqv3agm2awhz5se903vruatfhq77w3ls4evs3ch9zw97j25emudupq63nyw24cg27h2rsp`: signature
 	 * * `fj9srp`: Bech32 checksum
 	 */
+	
 	msatoshi = AMOUNT_MSAT(2500 * (1000ULL * 100000000) / 1000000);
 	b11 = new_bolt11(tmpctx, &msatoshi);
-	b11->chain = chainparams_for_network("bitcoin");
+	b11->chain = chainparams_for_network("qtum");
 	b11->timestamp = 1496314658;
 	if (!hex_decode("0001020304050607080900010203040506070809000102030405060708090102",
 			strlen("0001020304050607080900010203040506070809000102030405060708090102"),
@@ -225,8 +226,8 @@ int main(void)
 	b11->receiver_id = node;
 	b11->description = "1 cup coffee";
 	b11->expiry = 60;
-
-	test_b11("lnbc2500u1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4jsxqzpuaztrnwngzn3kdzw5hydlzf03qdgm2hdq27cqv3agm2awhz5se903vruatfhq77w3ls4evs3ch9zw97j25emudupq63nyw24cg27h2rspfj9srp", b11, NULL);
+	
+	test_b11("lnqc2500u1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4jsxqzpuxug2638gpkwdkfy53nhf73fu3t3ywzuugdq48w88vxxrcryr6s4q0nxax332374q0tjghylhfepa70np75ksztw5y3srrjxawufseuqp09cm5n", b11, NULL);
 
 	/* BOLT #11:
 	 *
@@ -246,9 +247,11 @@ int main(void)
 	 * * `cc6gd6ql3jrc5yzme8v4ntcewwz5cnw92tz0pc8qcuufvq7khhr8wpald05e92xw006sq94mg8v2ndf4sefvf9sygkshp5zfem29trqq`: signature
 	 * * `2yxxz7`: Bech32 checksum
 	 */
+
+	
 	msatoshi = AMOUNT_MSAT(20 * (1000ULL * 100000000) / 1000);
 	b11 = new_bolt11(tmpctx, &msatoshi);
-	b11->chain = chainparams_for_network("bitcoin");
+	b11->chain = chainparams_for_network("qtum");
 	b11->timestamp = 1496314658;
 	if (!hex_decode("0001020304050607080900010203040506070809000102030405060708090102",
 			strlen("0001020304050607080900010203040506070809000102030405060708090102"),
@@ -256,11 +259,10 @@ int main(void)
 		abort();
 	b11->receiver_id = node;
 	b11->description_hash = tal(b11, struct sha256);
-	test_b11("lnbc20m1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqscc6gd6ql3jrc5yzme8v4ntcewwz5cnw92tz0pc8qcuufvq7khhr8wpald05e92xw006sq94mg8v2ndf4sefvf9sygkshp5zfem29trqq2yxxz7", b11, "One piece of chocolate cake, one icecream cone, one pickle, one slice of swiss cheese, one slice of salami, one lollypop, one piece of cherry pie, one sausage, one cupcake, and one slice of watermelon");
+	test_b11("lnqc20m1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqsx68re6radj44t77x44tnp40ks035k7tmzzdeufjclajvel2gzhtqvvsq7wtgpc3yzanudmsheaaqjgmpyqs6kaudndl6lfak6pu042sqrf0nmj", b11, "One piece of chocolate cake, one icecream cone, one pickle, one slice of swiss cheese, one slice of salami, one lollypop, one piece of cherry pie, one sausage, one cupcake, and one slice of watermelon");
 
 	/* Malformed bolt11 strings (no '1'). */
 	badstr = "lnbc20mpvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqscc6gd6ql3jrc5yzme8v4ntcewwz5cnw92tz0pc8qcuufvq7khhr8wpald05e92xw006sq94mg8v2ndf4sefvf9sygkshp5zfem29trqq2yxxz7";
-
 	for (size_t i = 0; i <= strlen(badstr); i++) {
 		char *fail;
 		if (bolt11_decode(tmpctx, tal_strndup(tmpctx, badstr, i),
@@ -269,11 +271,11 @@ int main(void)
 		assert(strstr(fail, "Bad bech32")
 		       || strstr(fail, "Invoices must start with ln"));
 	}
-
+	
 	/* ALL UPPERCASE is allowed (useful for QR codes) */
 	msatoshi = AMOUNT_MSAT(2500 * (1000ULL * 100000000) / 1000000);
 	b11 = new_bolt11(tmpctx, &msatoshi);
-	b11->chain = chainparams_for_network("bitcoin");
+	b11->chain = chainparams_for_network("qtum");
 	b11->timestamp = 1496314658;
 	if (!hex_decode("0001020304050607080900010203040506070809000102030405060708090102",
 			strlen("0001020304050607080900010203040506070809000102030405060708090102"),
@@ -283,9 +285,9 @@ int main(void)
 	b11->description = "1 cup coffee";
 	b11->expiry = 60;
 
-	test_b11("LNBC2500U1PVJLUEZPP5QQQSYQCYQ5RQWZQFQQQSYQCYQ5RQWZQFQQQSYQCYQ5RQWZQFQYPQDQ5XYSXXATSYP3K7ENXV4JSXQZPUAZTRNWNGZN3KDZW5HYDLZF03QDGM2HDQ27CQV3AGM2AWHZ5SE903VRUATFHQ77W3LS4EVS3CH9ZW97J25EMUDUPQ63NYW24CG27H2RSPFJ9SRP", b11, NULL);
-
+	test_b11("LNQC2500U1PVJLUEZPP5QQQSYQCYQ5RQWZQFQQQSYQCYQ5RQWZQFQQQSYQCYQ5RQWZQFQYPQDQ5XYSXXATSYP3K7ENXV4JSXQZPUXUG2638GPKWDKFY53NHF73FU3T3YWZUUGDQ48W88VXXRCRYR6S4Q0NXAX332374Q0TJGHYLHFEPA70NP75KSZTW5Y3SRRJXAWUFSEUQP09CM5N", b11, NULL);
 	/* Unknown field handling */
+	
 	if (!node_id_from_hexstr("02330d13587b67a85c0a36ea001c4dba14bcd48dda8988f7303275b040bffb6abd", strlen("02330d13587b67a85c0a36ea001c4dba14bcd48dda8988f7303275b040bffb6abd"), &node))
 		abort();
 	msatoshi = AMOUNT_MSAT(3000000000);
@@ -306,9 +308,8 @@ int main(void)
 	for (size_t i = 0; i < 77; i++)
 		extra->data[i] = bech32_charset_rev[(u8)"dp68gup69uhnzwfj9cejuvf3xshrwde68qcrswf0d46kcarfwpshyaplw3skw0tdw4k8g6tsv9e8g"[i]];
 	list_add(&b11->extra_fields, &extra->list);
-
-	test_b11("lntb30m1pw2f2yspp5s59w4a0kjecw3zyexm7zur8l8n4scw674w8sftjhwec33km882gsdpa2pshjmt9de6zqun9w96k2um5ypmkjargypkh2mr5d9cxzun5ypeh2ursdae8gxqruyqvzddp68gup69uhnzwfj9cejuvf3xshrwde68qcrswf0d46kcarfwpshyaplw3skw0tdw4k8g6tsv9e8g4a3hx0v945csrmpm7yxyaamgt2xu7mu4xyt3vp7045n4k4czxf9kj0vw0m8dr5t3pjxuek04rtgyy8uzss5eet5gcyekd6m7u0mzv5sp7mdsag", b11, NULL);
-
+	
+	test_b11("lntq30m1pw2f2yspp5s59w4a0kjecw3zyexm7zur8l8n4scw674w8sftjhwec33km882gsdpa2pshjmt9de6zqun9w96k2um5ypmkjargypkh2mr5d9cxzun5ypeh2ursdae8gxqruyqvzddp68gup69uhnzwfj9cejuvf3xshrwde68qcrswf0d46kcarfwpshyaplw3skw0tdw4k8g6tsv9e8gc4ddge50g399uh9v5u6nnxj7phchdj84kd4qn05c8tle5qydz06y6nk6c8ccae7r48nvcyaxq23jwa7ghlxavkd28jqhr3elj2wlmggpkw9l59", b11, NULL);
 	/* FIXME: Test the others! */
 	wally_cleanup(0);
 	tal_free(tmpctx);
