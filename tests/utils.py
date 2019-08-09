@@ -124,6 +124,7 @@ class TailableProc(object):
         """
         logging.debug("Starting '%s'", " ".join(self.cmd_line))
         self.proc = subprocess.Popen(self.cmd_line, stdout=subprocess.PIPE, env=self.env)
+
         self.thread = threading.Thread(target=self.tail)
         self.thread.daemon = True
         self.thread.start()
@@ -274,14 +275,14 @@ class BitcoinD(TailableProc):
 
         self.bitcoin_dir = bitcoin_dir
         self.rpcport = rpcport
-        self.prefix = 'bitcoind'
+        self.prefix = 'qtumd'
 
         regtestdir = os.path.join(bitcoin_dir, 'regtest')
         if not os.path.exists(regtestdir):
             os.makedirs(regtestdir)
 
         self.cmd_line = [
-            'bitcoind',
+            'qtumd',
             '-datadir={}'.format(bitcoin_dir),
             '-printtoconsole',
             '-server',
@@ -295,7 +296,7 @@ class BitcoinD(TailableProc):
         # For after 0.16.1 (eg. 3f398d7a17f136cd4a67998406ca41a124ae2966), this
         # needs its own [regtest] section.
         BITCOIND_REGTEST = {'rpcport': rpcport}
-        btc_conf_file = os.path.join(bitcoin_dir, 'bitcoin.conf')
+        btc_conf_file = os.path.join(bitcoin_dir, 'qtum.conf')
         write_config(btc_conf_file, BITCOIND_CONFIG, BITCOIND_REGTEST)
         self.rpc = SimpleBitcoinProxy(btc_conf_file=btc_conf_file)
         self.proxies = []
@@ -915,7 +916,6 @@ class NodeFactory(object):
         for src, dst in connections:
             addr = src.rpc.newaddr()['bech32']
             src.bitcoin.rpc.sendtoaddress(addr, (fundamount + 1000000) / 10**8)
-
         bitcoin.generate_block(1)
         for src, dst in connections:
             wait_for(lambda: len(src.rpc.listfunds()['outputs']) > 0)

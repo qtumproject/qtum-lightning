@@ -19,14 +19,14 @@ def test_closing(node_factory, bitcoind):
     l1.pay(l2, 200000000)
 
     assert bitcoind.rpc.getmempoolinfo()['size'] == 0
-
+    
     billboard = only_one(l1.rpc.listpeers(l2.info['id'])['peers'][0]['channels'])['status']
     assert billboard == ['CHANNELD_NORMAL:Funding transaction locked.']
     billboard = only_one(l2.rpc.listpeers(l1.info['id'])['peers'][0]['channels'])['status']
     assert billboard == ['CHANNELD_NORMAL:Funding transaction locked.']
 
     bitcoind.generate_block(5)
-
+    
     # Only wait for the channels to activate with DEVELOPER=1,
     # otherwise it's going to take too long because of the missing
     # --dev-broadcast-interval
@@ -43,7 +43,7 @@ def test_closing(node_factory, bitcoind):
         l1.rpc.close(chan, False, 0)
 
     l1.daemon.wait_for_log(' to CHANNELD_SHUTTING_DOWN')
-    l2.daemon.wait_for_log(' to CHANNELD_SHUTTING_DOWN')
+    l2.daemon.wait_for_log(' to CHANNELD_SHUTTING_DOWN') 
 
     l1.daemon.wait_for_log(' to CLOSINGD_SIGEXCHANGE')
     l2.daemon.wait_for_log(' to CLOSINGD_SIGEXCHANGE')
@@ -57,10 +57,9 @@ def test_closing(node_factory, bitcoind):
     wait_for(lambda: len(l2.getactivechannels()) == 0)
 
     assert bitcoind.rpc.getmempoolinfo()['size'] == 1
-
     # Now grab the close transaction
-    closetxid = only_one(bitcoind.rpc.getrawmempool(False))
 
+    closetxid = only_one(bitcoind.rpc.getrawmempool(False))
     billboard = only_one(l1.rpc.listpeers(l2.info['id'])['peers'][0]['channels'])['status']
     assert billboard == [
         'CLOSINGD_SIGEXCHANGE:We agreed on a closing fee of 5430 satoshi for tx:{}'.format(closetxid),
@@ -117,7 +116,7 @@ def test_closing_while_disconnected(node_factory, bitcoind):
     l1.daemon.wait_for_log('sendrawtx exit 0')
     l2.daemon.wait_for_log('sendrawtx exit 0')
 
-    bitcoind.generate_block(101)
+    bitcoind.generate_block(501)
     wait_for(lambda: len(l1.rpc.listchannels()['channels']) == 0)
     wait_for(lambda: len(l2.rpc.listchannels()['channels']) == 0)
 
@@ -533,7 +532,7 @@ def test_onchain_unwatch(node_factory, bitcoind):
 @unittest.skipIf(not DEVELOPER, "needs DEVELOPER=1")
 def test_onchaind_replay(node_factory, bitcoind):
     disconnects = ['+WIRE_REVOKE_AND_ACK', 'permfail']
-    options = {'watchtime-blocks': 201, 'cltv-delta': 101}
+    options = {'watchtime-blocks': 201, 'cltv-delta': 501}
     # Feerates identical so we don't get gratuitous commit to update them
     l1 = node_factory.get_node(options=options, disconnect=disconnects, feerates=(7500, 7500, 7500))
     l2 = node_factory.get_node(options=options)
@@ -545,7 +544,7 @@ def test_onchaind_replay(node_factory, bitcoind):
     routestep = {
         'msatoshi': 10**8 - 1,
         'id': l2.info['id'],
-        'delay': 101,
+        'delay': 501,
         'channel': '1x1x1'
     }
     l1.rpc.sendpay([routestep], rhash)

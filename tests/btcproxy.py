@@ -34,7 +34,7 @@ class BitcoinRpcProxy(object):
         self.request_count = 0
 
     def _handle_request(self, r):
-        conf_file = os.path.join(self.bitcoind.bitcoin_dir, 'bitcoin.conf')
+        conf_file = os.path.join(self.bitcoind.bitcoin_dir, 'qtum.conf')
         brpc = BitcoinProxy(btc_conf_file=conf_file)
         method = r['method']
 

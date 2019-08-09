@@ -31,9 +31,8 @@ __attempts = {}
 def test_base_dir():
     directory = tempfile.mkdtemp(prefix='ltests-')
     print("Running tests in {}".format(directory))
-
     yield directory
-
+    
     if os.listdir(directory) == []:
         shutil.rmtree(directory)
 
@@ -76,6 +75,7 @@ def bitcoind(directory):
     bitcoind = BitcoinD(bitcoin_dir=directory)
     try:
         bitcoind.start()
+        
     except Exception:
         bitcoind.stop()
         raise
@@ -86,11 +86,10 @@ def bitcoind(directory):
         bitcoind.rpc.stop()
         raise ValueError("bitcoind is too old. At least version 16000 (v0.16.0)"
                          " is needed, current version is {}".format(info['version']))
-
     info = bitcoind.rpc.getblockchaininfo()
     # Make sure we have some spendable funds
-    if info['blocks'] < 101:
-        bitcoind.generate_block(101 - info['blocks'])
+    if info['blocks'] < 501:
+        bitcoind.generate_block(501 - info['blocks'])
     elif bitcoind.rpc.getwalletinfo()['balance'] < 1:
         logging.debug("Insufficient balance, generating 1 block")
         bitcoind.generate_block(1)
