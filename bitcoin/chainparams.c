@@ -2,7 +2,7 @@
 #include <ccan/array_size/array_size.h>
 #include <ccan/str/str.h>
 #include <string.h>
-
+#include <stdio.h>
 /* Version codes for BIP32 extended keys in libwally-core.
  * Stolen from wally_bip32.h in libwally-core*/
 #define BIP32_VER_MAIN_PUBLIC  0x0488B21E
@@ -31,7 +31,7 @@ const struct chainparams networks[] = {
      /* "Lightning Charge Powers Developers & Blockstream Store" */
      .when_lightning_became_cool = 504500,
      .p2pkh_version = 0,
-     .p2sh_version = 5,
+     .p2sh_version = 50,
      .testnet = false,
      .bip32_key_version = {.bip32_pubkey_version = BIP32_VER_MAIN_PUBLIC, .bip32_privkey_version = BIP32_VER_MAIN_PRIVATE}},
     {.network_name = "regtest",
@@ -46,7 +46,7 @@ const struct chainparams networks[] = {
      .max_payment = AMOUNT_MSAT_INIT(0xFFFFFFFFULL),
      .when_lightning_became_cool = 1,
      .p2pkh_version = 111,
-     .p2sh_version = 196,
+     .p2sh_version = 110,
      .testnet = true,
      .bip32_key_version = {.bip32_pubkey_version = BIP32_VER_TEST_PUBLIC, .bip32_privkey_version = BIP32_VER_TEST_PRIVATE}},
     {.network_name = "testnet",
@@ -60,7 +60,7 @@ const struct chainparams networks[] = {
      .max_funding = AMOUNT_SAT_INIT((1 << 24) - 1),
      .max_payment = AMOUNT_MSAT_INIT(0xFFFFFFFFULL),
      .p2pkh_version = 111,
-     .p2sh_version = 196,
+     .p2sh_version = 110,
      .testnet = true,
      .bip32_key_version = {.bip32_pubkey_version = BIP32_VER_TEST_PUBLIC, .bip32_privkey_version = BIP32_VER_TEST_PRIVATE}},
     {.network_name = "litecoin",
