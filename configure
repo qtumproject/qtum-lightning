@@ -2,7 +2,7 @@
 # Simple configure script for c-lightning.
 
 set -e
-
+DEVELOPER=1
 CONFIGURATOR=ccan/tools/configurator/configurator
 CONFIG_VAR_FILE=config.vars
 CONFIG_HEADER=ccan/config.h

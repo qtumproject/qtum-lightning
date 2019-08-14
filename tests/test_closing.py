@@ -26,7 +26,7 @@ def test_closing(node_factory, bitcoind):
     assert billboard == ['CHANNELD_NORMAL:Funding transaction locked.']
 
     bitcoind.generate_block(5)
-    
+
     # Only wait for the channels to activate with DEVELOPER=1,
     # otherwise it's going to take too long because of the missing
     # --dev-broadcast-interval
@@ -62,7 +62,7 @@ def test_closing(node_factory, bitcoind):
     closetxid = only_one(bitcoind.rpc.getrawmempool(False))
     billboard = only_one(l1.rpc.listpeers(l2.info['id'])['peers'][0]['channels'])['status']
     assert billboard == [
-        'CLOSINGD_SIGEXCHANGE:We agreed on a closing fee of 5430 satoshi for tx:{}'.format(closetxid),
+        'CLOSINGD_SIGEXCHANGE:We agreed on a closing fee of 73124 satoshi for tx:{}'.format(closetxid),
     ]
     bitcoind.generate_block(1)
 
@@ -74,14 +74,14 @@ def test_closing(node_factory, bitcoind):
     assert closetxid in set([o['txid'] for o in l2.rpc.listfunds()['outputs']])
 
     wait_for(lambda: only_one(l1.rpc.listpeers(l2.info['id'])['peers'][0]['channels'])['status'] == [
-        'CLOSINGD_SIGEXCHANGE:We agreed on a closing fee of 5430 satoshi for tx:{}'.format(closetxid),
+        'CLOSINGD_SIGEXCHANGE:We agreed on a closing fee of 73124 satoshi for tx:{}'.format(closetxid),
         'ONCHAIN:Tracking mutual close transaction',
         'ONCHAIN:All outputs resolved: waiting 99 more blocks before forgetting channel'
     ])
 
     bitcoind.generate_block(9)
     wait_for(lambda: only_one(l1.rpc.listpeers(l2.info['id'])['peers'][0]['channels'])['status'] == [
-        'CLOSINGD_SIGEXCHANGE:We agreed on a closing fee of 5430 satoshi for tx:{}'.format(closetxid),
+        'CLOSINGD_SIGEXCHANGE:We agreed on a closing fee of 73124 satoshi for tx:{}'.format(closetxid),
         'ONCHAIN:Tracking mutual close transaction',
         'ONCHAIN:All outputs resolved: waiting 90 more blocks before forgetting channel'
     ])
